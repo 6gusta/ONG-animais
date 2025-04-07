@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastrar Pet – Adote um Amigo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-main: #fffaf5;
+      --primary: #ff6f61;
+      --accent: #ffe0e0;
+      --dark: #222;
+    }
+  
+    body {
+      background-color: var(--bg-main);
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://www.transparenttextures.com/patterns/paw-print.png');
+      animation: bgScroll 60s linear infinite;
+    }
+  
+    @keyframes bgScroll {
+      from { background-position: 0 0; }
+      to { background-position: 1000px 1000px; }
+    }
+  
+    .form-container {
+      background: #fff;
+      border-radius: 1.5rem;
+      padding: 3rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      margin-top: 4rem;
+      margin-bottom: 4rem;
+    }
+  
+    .form-title {
+      text-align: center;
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+    }
+  
+    label {
+      font-weight: 500;
+    }
+  
+    .form-control, .form-select {
+      border-radius: 1rem;
+      padding: 0.6rem 1rem;
+      border: 1px solid #ddd;
+    }
+  
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(255,111,97,0.25);
+    }
+  
+    button[type="submit"] {
+      background-color: var(--primary);
+      border: none;
+      padding: 0.75rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border-radius: 2rem;
+      transition: background-color 0.2s ease;
+    }
+  
+    button[type="submit"]:hover {
+      background-color: #ff4e42;
+    }
+  
+    .form-text {
+      font-size: 0.85rem;
+      color: #777;
+    }
+  </style>
+  
+</head>
+<body>
+
+<div class="container">
+  <div class="form-container mx-auto col-md-8">
+    <h2 class="form-title">📋 Cadastrar novo pet para adoção</h2>
+
+    <form>
+      <!-- Nome do pet -->
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome do Pet</label>
+        <input type="text" class="form-control" id="nome" required />
+      </div>
+
+      <!-- Idade e Sexo -->
+      <div class="row mb-3">
+        <div class="col">
+          <label class="form-label">Idade</label>
+          <input type="text" class="form-control" required placeholder="Ex: 2 anos" />
+        </div>
+        <div class="col">
+          <label class="form-label">Sexo</label>
+          <select class="form-select" required>
+            <option value="">Selecione</option>
+            <option>Macho</option>
+            <option>Fêmea</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Porte e cidade -->
+      <div class="row mb-3">
+        <div class="col">
+          <label class="form-label">Porte</label>
+          <select class="form-select" required>
+            <option value="">Selecione</option>
+            <option>Pequeno</option>
+            <option>Médio</option>
+            <option>Grande</option>
+          </select>
+        </div>
+        <div class="col">
+          <label class="form-label">Cidade/Estado</label>
+          <input type="text" class="form-control" placeholder="Ex: São Paulo - SP" required />
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="mb-3">
+        <label class="form-label">Tags (características)</label>
+        <input type="text" class="form-control" placeholder="Ex: Dócil, vacinado, castrado..." />
+        <div class="form-text">Separe por vírgula</div>
+      </div>
+
+      <!-- Sobre o pet -->
+      <div class="mb-3">
+        <label class="form-label">Descrição</label>
+        <textarea class="form-control" rows="4" placeholder="Fale um pouco sobre o pet..." required></textarea>
+      </div>
+
+      <!-- Foto -->
+      <div class="mb-4">
+        <label class="form-label">Foto principal</label>
+        <input type="file" class="form-control" />
+      </div>
+
+      <!-- Botão -->
+      <button type="submit" class="btn btn-success w-100">Cadastrar Pet</button>
+    </form>
+  </div>
+</div>
+<script>
+  const form = document.querySelector("form");
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const nome = document.getElementById("nome").value;
+    const idade = form.querySelector('input[placeholder^="Ex: 2 anos"]').value;
+    const sexo = form.querySelectorAll('select')[0].value;
+    const porte = form.querySelectorAll('select')[1].value;
+    const cidade = form.querySelector('input[placeholder^="Ex: São Paulo"]').value;
+    const tagsInput = form.querySelector('input[placeholder^="Ex: Dócil"]').value;
+    const descricao = form.querySelector("textarea").value;
+    const file = form.querySelector('input[type="file"]').files[0];
+
+    const salvarPet = (fotoBase64) => {
+      const novoPet = {
+        nome,
+        idade,
+        sexo,
+        porte,
+        cidade,
+        tags: tagsInput.split(",").map(tag => tag.trim()),
+        descricao,
+        foto: fotoBase64 || null
+      };
+
+      const pets = JSON.parse(localStorage.getItem("pets")) || [];
+      pets.push(novoPet);
+      localStorage.setItem("pets", JSON.stringify(pets));
+
+      // redireciona para o feed
+      window.location.href = "pets.html";
+    };
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        salvarPet(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      salvarPet(null);
+    }
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

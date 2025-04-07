@@ -1,0 +1,127 @@
+<!-- Página 1: Perfil do Pet (Thor) -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thor – Adote um Amigo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { background-color: #fdfdfd; }
+    .tag { background-color: #e0f7fa; color: #007b83; padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; margin-right: 6px; margin-bottom: 6px; display: inline-block; }
+    .pet-header { background: linear-gradient(to right, #e0f7fa, #fce4ec); padding: 2rem; border-radius: 1rem; }
+    .gallery img { height: 140px; object-fit: cover; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <div class="pet-header mb-4 text-center shadow-sm">
+      <h1 class="display-5 fw-bold">Thor 🐶</h1>
+      <p class="text-muted">2 anos • Macho • Porte médio • São Paulo - SP</p>
+      <div class="d-flex justify-content-center flex-wrap">
+        <span class="tag">Castrado</span>
+        <span class="tag">Dócil</span>
+        <span class="tag">Adora crianças</span>
+        <span class="tag">Vacinado</span>
+        <span class="tag">Amigável com outros pets</span>
+      </div>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <img src="raca-de-cachorro-muito-popular-no-brasil-1.jpg" class="img-fluid rounded shadow" alt="Thor" />
+      </div>
+      <div class="col-md-6">
+        <h4>🐾 Sobre mim</h4>
+        <p>
+          Oi! Eu sou o Thor. Sou um vira-lata caramelo cheio de energia e amor pra dar. 🐕‍🦺  
+          Gosto de brincar com bolinha, correr no quintal e sou ótimo com crianças.  
+          Já estou vacinado e castrado. Só falta você pra me levar pra casa!
+        </p>
+        <div class="mt-4">
+          <h5>ONG Responsável:</h5>
+          <p><strong>Amigos de Patas</strong><br />São Paulo - SP<br />contato@amigosdepatas.org.br</p>
+        </div>
+        <div class="mt-4 d-flex gap-2 flex-wrap">
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#interesseModal">Tenho interesse 💚</button>
+          <a class="btn btn-outline-secondary" href="https://wa.me/5500000000000?text=Oi!%20Quero%20adotar%20o%20Thor!" target="_blank">Compartilhar no WhatsApp</a>
+        </div>
+      </div>
+    </div>
+    <div class="mt-5">
+      <h4>📸 Momentos do Thor</h4>
+      <div class="row gallery g-3">
+        <div class="col-6 col-md-3"><img src="raca-de-cachorro-muito-popular-no-brasil-1.jpg" class="w-100" /></div>
+        <div class="col-6 col-md-3"><img src="raca-de-cachorro-muito-popular-no-brasil-1.jpg" class="w-100" /></div>
+        <div class="col-6 col-md-3"><img src="raca-de-cachorro-muito-popular-no-brasil-1.jpg" class="w-100" /></div>
+        <div class="col-6 col-md-3"><img src="raca-de-cachorro-muito-popular-no-brasil-1.jpg" class="w-100" /></div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal de Interesse -->
+  <div class="modal fade" id="interesseModal" tabindex="-1" aria-labelledby="interesseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" onsubmit="salvarInteresse(event)">
+        <div class="modal-header">
+          <h5 class="modal-title">Quero Adotar o Thor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Seu nome</label>
+            <input type="text" class="form-control" id="nome" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">E-mail ou WhatsApp</label>
+            <input type="text" class="form-control" id="contato" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Mensagem (opcional)</label>
+            <textarea class="form-control" rows="3" id="mensagem"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Enviar Interesse</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+    function salvarInteresse(e) {
+      e.preventDefault();
+      const nome = document.getElementById("nome").value;
+      const contato = document.getElementById("contato").value;
+      const mensagem = document.getElementById("mensagem").value;
+      const interessado = { nome, contato, mensagem, pet: "Thor" };
+      const lista = JSON.parse(localStorage.getItem("interessados")) || [];
+      lista.push(interessado);
+      localStorage.setItem("interessados", JSON.stringify(lista));
+      alert("Interesse enviado com sucesso!");
+      document.querySelector("form").reset();
+      const modal = bootstrap.Modal.getInstance(document.getElementById("interesseModal"));
+      modal.hide();
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<!-- Página 2: Painel da ONG (Somente trecho atualizado para interessados) -->
+<script>
+  const interessadosContainer = document.getElementById("interessadosContainer");
+  const interessados = JSON.parse(localStorage.getItem("interessados")) || [];
+  if (interessados.length === 0) {
+    interessadosContainer.innerHTML = "<p class='text-muted'>Nenhum interessado até o momento.</p>";
+  } else {
+    interessados.forEach(p => {
+      const div = document.createElement("div");
+      div.className = "interessado-card";
+      div.innerHTML = `
+        <h5>${p.nome}</h5>
+        <p><strong>Contato:</strong> ${p.contato}</p>
+        <p><strong>Mensagem:</strong> ${p.mensagem || "(Sem mensagem)"}</p>
+        <a href="https://wa.me/${p.contato.replace(/\D/g, '')}?text=Oi!%20Sou%20da%20ONG%20sobre%20a%20adoção%20do%20${p.pet}" target="_blank" class="badge text-bg-success p-2 text-decoration-none">📱 Chamar no WhatsApp</a>
+      `;
+      interessadosContainer.appendChild(div);
+    });
+  }
+</script>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel da ONG – Adote um Amigo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f9f9f9;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .navbar {
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    .pet-card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .pet-img {
+      height: 180px;
+      object-fit: cover;
+      width: 100%;
+    }
+    .btn-edit {
+      background-color: #fff3cd;
+      border: none;
+      color: #856404;
+    }
+    .btn-delete {
+      background-color: #f8d7da;
+      border: none;
+      color: #721c24;
+    }
+    .btn-interessados {
+      border: 1px solid #007bff;
+      background-color: white;
+      color: #007bff;
+    }
+    .interessado-card {
+      background-color: #fff;
+      border-radius: 0.8rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra superior -->
+  <nav class="navbar navbar-light px-4 py-3 mb-4">
+    <span class="navbar-brand mb-0 h4">🐾 Olá, <strong class="text-primary" id="ongNome">ONG</strong></span>
+    <a href="login.html" class="btn btn-outline-danger btn-sm">Sair</a>
+  </nav>
+
+  <div class="container">
+    <h3 class="mb-4">📂 Meus Pets Cadastrados</h3>
+    <div class="row g-4" id="petsContainer">
+      <!-- Cards de pets inseridos via JS -->
+    </div>
+
+    <hr class="my-5"/>
+
+    <h3 class="mb-4">👀 Interessados na Adoção</h3>
+    <div id="interessadosContainer">
+      <div class="interessado-card">
+        <h5>Maria Oliveira</h5>
+        <p><strong>Contato:</strong> maria@gmail.com</p>
+        <p><strong>Mensagem:</strong> Tenho uma casa grande, amo animais e adoraria dar um lar pro Thor ❤️</p>
+        <a href="https://wa.me/5599999999999?text=Oi!%20Sou%20da%20ONG%20sobre%20a%20adoção%20do%20Thor" target="_blank" class="badge text-bg-success p-2 text-decoration-none">📱 Chamar no WhatsApp</a>
+      </div>
+
+      <div class="interessado-card">
+        <h5>João Silva</h5>
+        <p><strong>Contato:</strong> joao.silva@hotmail.com</p>
+        <p><strong>Mensagem:</strong> Tenho filhos pequenos e estamos procurando um cãozinho como o Thor 🐾</p>
+        <a href="https://wa.me/5588888888888?text=Oi!%20Sou%20da%20ONG%20sobre%20a%20adoção%20do%20Thor" target="_blank" class="badge text-bg-success p-2 text-decoration-none">📱 Chamar no WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ongLogada = JSON.parse(localStorage.getItem("ongLogada"));
+    const pets = JSON.parse(localStorage.getItem("pets")) || [];
+
+    const nomeONG = document.getElementById("ongNome");
+    if (ongLogada && nomeONG) {
+      nomeONG.textContent = ongLogada.nome;
+    }
+
+    const petsContainer = document.getElementById("petsContainer");
+    const petsDaONG = pets.filter(pet => pet.ongEmail === ongLogada?.email);
+
+    if (petsDaONG.length === 0) {
+      petsContainer.innerHTML = "<p class='text-muted'>Nenhum pet cadastrado ainda.</p>";
+    } else {
+      petsDaONG.forEach((pet, index) => {
+        const card = document.createElement("div");
+        card.className = "col-md-4";
+        card.innerHTML = `
+          <div class="pet-card">
+            <img src="${pet.foto || 'https://placekitten.com/400/250'}" class="pet-img" alt="${pet.nome}" />
+            <div class="p-3">
+              <h5 class="fw-bold">${pet.nome}</h5>
+              <p class="mb-1 text-muted">${pet.idade} • ${pet.sexo} • ${pet.porte}</p>
+              <div class="d-flex gap-2 mt-3">
+                <button class="btn btn-edit btn-sm" onclick="editarPet(${index})">✏️ Editar</button>
+                <button class="btn btn-delete btn-sm" onclick="excluirPet(${index})">🗑️ Excluir</button>
+                <button class="btn btn-interessados btn-sm" onclick="verInteressados('${pet.nome}')">👀 Interessados</button>
+              </div>
+            </div>
+          </div>`;
+        petsContainer.appendChild(card);
+      });
+    }
+
+    function editarPet(index) {
+      alert("Função de edição futura!"); // aqui pode redirecionar depois
+    }
+
+    function excluirPet(index) {
+      if (confirm("Deseja realmente excluir esse pet?")) {
+        pets.splice(index, 1);
+        localStorage.setItem("pets", JSON.stringify(pets));
+        location.reload();
+      }
+    }
+
+    function verInteressados(nome) {
+      alert("Mostrando interessados pelo pet: " + nome);
+      window.scrollTo({
+        top: document.getElementById("interessadosContainer").offsetTop - 50,
+        behavior: "smooth"
+      });
+    }
+
+    
+  const interessadosContainer = document.getElementById("interessadosContainer");
+  const interessados = JSON.parse(localStorage.getItem("interessados")) || [];
+
+  const interessadosDoThor = interessados.filter(i => i.pet === "Thor");
+
+  if (interessadosDoThor.length === 0) {
+    interessadosContainer.innerHTML = "<p class='text-muted'>Nenhum interessado ainda.</p>";
+  } else {
+    interessadosDoThor.forEach(i => {
+      const card = document.createElement("div");
+      card.className = "interessado-card";
+      card.innerHTML = `
+        <h5>${i.nome}</h5>
+        <p><strong>Contato:</strong> ${i.contato}</p>
+        <p><strong>Mensagem:</strong> ${i.mensagem || "Sem mensagem enviada."}</p>
+        <a href="https://wa.me/${extrairNumeroWhatsApp(i.contato)}?text=Oi!%20Sou%20da%20ONG%20sobre%20a%20adoção%20do%20Thor" 
+          target="_blank" class="badge text-bg-success p-2 text-decoration-none">
+          📱 Chamar no WhatsApp
+        </a>
+      `;
+      interessadosContainer.appendChild(card);
+    });
+  }
+
+  function extrairNumeroWhatsApp(contato) {
+    const apenasNumeros = contato.replace(/\D/g, "");
+    return apenasNumeros.length >= 10 ? apenasNumeros : "5500000000000";
+  }
+  </script>
+
+</body>
+</html>
