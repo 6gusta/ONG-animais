@@ -105,23 +105,4 @@
 </body>
 </html>
 
-<!-- Página 2: Painel da ONG (Somente trecho atualizado para interessados) -->
-<script>
-  const interessadosContainer = document.getElementById("interessadosContainer");
-  const interessados = JSON.parse(localStorage.getItem("interessados")) || [];
-  if (interessados.length === 0) {
-    interessadosContainer.innerHTML = "<p class='text-muted'>Nenhum interessado até o momento.</p>";
-  } else {
-    interessados.forEach(p => {
-      const div = document.createElement("div");
-      div.className = "interessado-card";
-      div.innerHTML = `
-        <h5>${p.nome}</h5>
-        <p><strong>Contato:</strong> ${p.contato}</p>
-        <p><strong>Mensagem:</strong> ${p.mensagem || "(Sem mensagem)"}</p>
-        <a href="https://wa.me/${p.contato.replace(/\D/g, '')}?text=Oi!%20Sou%20da%20ONG%20sobre%20a%20adoção%20do%20${p.pet}" target="_blank" class="badge text-bg-success p-2 text-decoration-none">📱 Chamar no WhatsApp</a>
-      `;
-      interessadosContainer.appendChild(div);
-    });
-  }
-</script>
+
